@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="Control.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="MakePlat_Main.cpp" />
     <ClCompile Include="Plat.cpp" />
@@ -139,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="Control.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Plat.h" />
     <ClInclude Include="Player.h" />

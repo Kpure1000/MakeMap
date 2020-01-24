@@ -1,6 +1,7 @@
 #include<SFML/Graphics.hpp>
 #include"Plat.h"
 #include"Player.h"
+#include"Control.h"
 
 #define CannotResize  (sf::Style::Titlebar |  sf::Style::Close)
 
@@ -12,13 +13,24 @@ int main() {
 	sf::View Player_ca;
 	App.setView(Player_ca);
 
-	vector<GameObject>Plats;
-
 	AssetManager SourceManager;
+	AssetManager::GetTexture(PlatForm);
+	AssetManager::GetTexture(Player_f);
 
-	sf::Sprite Plat1_sp(AssetManager::GetTexture(PlatForm));
+	vector<Plat>Plats;
 
-	sf::Sprite Player1_sp(AssetManager::GetTexture(Player_f));
+	Control Con1(App,Plats);
+	//Con1.RandomMake();
+
+	sf::Sprite Plat_sp(AssetManager::GetTexture(PlatForm));
+	Plat Plat1(Plat_sp, App, "Normal");
+
+	thread MouseControlThread(MouseControl, ref(App), ref(Plat1));
+	Plat1.SetUp();
+
+	//for (auto it = Plats.begin(); it != Plats.end(); it++) {
+	//	it->SetUp();
+	//}
 
 	while (App.isOpen()) {
 		Event ev;
@@ -30,12 +42,17 @@ int main() {
 				App.close();
 			}
 		}
-
 		App.clear(Color(180, 180, 200, 0));
 
-		App.display();
+		//for (auto it = Plats.begin(); it != Plats.end(); it++) {
+		//	it->Update();
+		//}
 
+		Plat1.Update();
+
+		App.display();
 	}
 
+	MouseControlThread.join();
 	return 0;
 }

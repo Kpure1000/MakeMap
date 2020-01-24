@@ -10,7 +10,7 @@ protected:
 
 	//Reference:
 
-	sf::Sprite& sprite;
+	sf::Sprite sprite;
 	
 	sf::RenderWindow& App;
 
@@ -48,7 +48,7 @@ protected:
 
 public: //	Set
 	
-	GameObject(sf::Sprite& sp, sf::RenderWindow& app,
+	GameObject(sf::Sprite sp, sf::RenderWindow& app,
 		std::string const& objecttypename);
 	
 	//GameObject(GameObject const& gameobject);
@@ -94,11 +94,14 @@ public: //  Game
 class Objects {
 private:
 	vector<GameObject>GameObjects;
+
 	string FileName;
-	ifstream In01;
+	
 public:
-	Objects(std::string const& filename):FileName(filename) {
-		In01.open(FileName);
-	}
+	Objects(std::string const& filename);
+
+	void SetMap();
+	
+	void GetMap();
 	
 };

@@ -1,6 +1,6 @@
 #include "GameObject.h"
 GameObject::GameObject
-(sf::Sprite& sp, sf::RenderWindow& app, std::string const& objecttypename)
+(sf::Sprite sp, sf::RenderWindow& app, std::string const& objecttypename)
 	:sprite(sp), App(app), ObjectTypeName(objecttypename)
 {
 	newx = newy = 0;
@@ -78,4 +78,19 @@ void GameObject::Gravity() {
 }
 
 
-//end
+//GameObject end
+
+//Objects start:
+
+Objects::Objects(std::string const& filename) {
+
+}
+
+void Objects::GetMap() {
+
+}
+
+void Objects::SetMap() {
+	ofstream WriteMap(FileName);
+
+}
