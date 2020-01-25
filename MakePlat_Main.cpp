@@ -5,13 +5,17 @@
 
 #define CannotResize  (sf::Style::Titlebar |  sf::Style::Close)
 
+void timecontrol(sf::RenderWindow& App, time_t& timedata) {
+	while (App.isOpen()) {
+		timedata = clock();
+		timedata %= LLONG_MAX;
+	}
+}
+
 int main() {
-	const float AppW = 1200, AppH = 1200;
+	const float AppW = 2000, AppH = 1500;
 	RenderWindow App(VideoMode((unsigned int)AppW, (unsigned int)AppH), "WinterGame", CannotResize);
 	App.setFramerateLimit(120);
-
-	sf::View Player_ca;
-	App.setView(Player_ca);
 
 	AssetManager SourceManager;
 	AssetManager::GetTexture(PlatForm);
@@ -23,14 +27,29 @@ int main() {
 	//Con1.RandomMake();
 
 	sf::Sprite Plat_sp(AssetManager::GetTexture(PlatForm));
-	Plat Plat1(Plat_sp, App, "Normal");
+	Plat Plat1(Plat_sp, App, "Normal",Plats);
+	Plat1.SetGravity(false);
+	Plat1.SetScale({ 3.5f,3.5f });
 
-	thread MouseControlThread(MouseControl, ref(App), ref(Plat1));
+	sf::Sprite Player_sp(AssetManager::GetTexture(Player_f));
+	Player Player1(Player_sp, App, "Player1", Plats);
+	Player1.SetGravity(true);
+	Player1.SetScale({ 3.5f,3.5f });
+
+	time_t TimeData = 0;
+	thread TimeControl(timecontrol, ref(App), ref(TimeData));
+
+	thread MoveThread(MoverJump, ref(Player1), ref(App), ref(TimeData));
+
+
 	Plat1.SetUp();
+	Plat1.SetMover(true);
 
-	//for (auto it = Plats.begin(); it != Plats.end(); it++) {
-	//	it->SetUp();
-	//}
+	Player1.SetUp();
+
+	for (auto it = Plats.begin(); it != Plats.end(); it++) {
+		it->SetUp();
+	}
 
 	while (App.isOpen()) {
 		Event ev;
@@ -44,15 +63,35 @@ int main() {
 		}
 		App.clear(Color(180, 180, 200, 0));
 
-		//for (auto it = Plats.begin(); it != Plats.end(); it++) {
-		//	it->Update();
-		//}
-
 		Plat1.Update();
+
+		if (Mouse::isButtonPressed(Mouse::Left)) {
+			Plat tmp = Plat1;
+			tmp.SetCousor(false);
+			Plats.push_back(tmp);
+			while (Mouse::isButtonPressed(Mouse::Left))
+				;
+		}
+		
+		if (KeyEvent(LControl)) {
+			if (!Plats.empty() and KeyEvent(Z)) {
+				Plats.pop_back();
+				while (KeyEvent(Z))
+					;
+			}
+		}
+
+		for (auto it = Plats.begin(); it != Plats.end(); it++) {
+			it->Update();
+		}
+
+		Player1.Update();
 
 		App.display();
 	}
 
-	MouseControlThread.join();
+	MoveThread.join();
+	TimeControl.join();
+
 	return 0;
 }

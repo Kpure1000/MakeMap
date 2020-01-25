@@ -18,7 +18,8 @@ public:
 
 	void RandomMake();
 
+	friend void MouseControl(Control&, sf::RenderWindow&, Plat&);
 
 };
 
-void MouseControl(sf::RenderWindow&, Plat&);
+void MouseControl(Control&, sf::RenderWindow&, Plat&);

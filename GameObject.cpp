@@ -70,7 +70,7 @@ void GameObject::Gravity() {
 	if (CollisionCheck() == IsTop) {
 		dy += GRAVITY; 
 	}
-	else {
+	else if (CollisionCheck() == IsLanding) {
 		dy = 0;
 	}
 
@@ -81,16 +81,3 @@ void GameObject::Gravity() {
 //GameObject end
 
 //Objects start:
-
-Objects::Objects(std::string const& filename) {
-
-}
-
-void Objects::GetMap() {
-
-}
-
-void Objects::SetMap() {
-	ofstream WriteMap(FileName);
-
-}

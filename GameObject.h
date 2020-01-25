@@ -90,18 +90,3 @@ public: //  Game
 	virtual void Update() = 0;
 
 };
-
-class Objects {
-private:
-	vector<GameObject>GameObjects;
-
-	string FileName;
-	
-public:
-	Objects(std::string const& filename);
-
-	void SetMap();
-	
-	void GetMap();
-	
-};

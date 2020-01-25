@@ -1,18 +1,32 @@
 #include "Plat.h"
 
-Plat::Plat(sf::Sprite& sp, sf::RenderWindow& app, std::string const& objecttypename)
-	:GameObject(sp, app, objecttypename) {
-
+Plat::Plat(sf::Sprite& sp, sf::RenderWindow& app,
+	std::string const& objecttypename, vector<Plat>&plats)
+	:GameObject(sp, app, objecttypename), Plats(plats) {
+	IsCousor = true;
+	IsMover = false;
 }
 
  //  Control:///////////
 
 int Plat::CollisionCheck() {
-	if (newy > App.getSize().y)
+	if (newy >= App.getSize().y)
 	{
-		dy = -25.0f;
+		newy = App.getSize().y;
+		cout << App.getSize().y << "real: " << newy << endl;
+		return IsLanding;
 	}
-	return 1;
+	else {
+		return IsTop;
+	}
+}
+
+void Plat::SetCousor(bool setting) {
+	IsCousor = setting;
+}
+
+void Plat::SetMover(bool setting) {
+	IsMover = setting;
 }
 
  //  Game://////////////
@@ -30,14 +44,27 @@ void Plat::SetUp() {
 }
 
 void Plat::Update() {
-	newx = sprite.getPosition().x,
-		newy = sprite.getPosition().y;
+	if (IsMover) {
+		newx = sprite.getPosition().x,
+			newy = sprite.getPosition().y;
+	}
 
 	sf::Vector2f Speed(0, 0);
 
 	Gravity();
 
-	sprite.setPosition(newx, newy);
+	if (IsCousor) {
+		Vector2i MousePos = Mouse::getPosition(App);
+		newx = MousePos.x, newy = MousePos.y;
+	}
+	if (IsMover) {
+		sprite.setPosition(newx, newy);
+	}
 
 	Draw();
+}
+
+Vector2f Plat::GetSize() {
+	return Vector2f(sprite.getTextureRect().width,
+		sprite.getTextureRect().height);
 }

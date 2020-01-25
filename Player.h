@@ -1,13 +1,13 @@
 #pragma once
-#include "GameObject.h"
+#include "Plat.h"
 class Player :
 	public GameObject {
 private:
-
+	vector<Plat>&Plats;
 public:
 
 	Player(sf::Sprite& sp, sf::RenderWindow& app,
-		std::string const& objecttypename);
+		std::string const& objecttypename, vector<Plat>&);
 
 public: //  Control
 

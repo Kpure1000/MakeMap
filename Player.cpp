@@ -1,7 +1,8 @@
 #include "Player.h"
 
 Player::Player(sf::Sprite& sp, sf::RenderWindow& app,
-	std::string const& objecttypename) :GameObject(sp, app, objecttypename)
+	std::string const& objecttypename, vector<Plat>&plats)
+	:GameObject(sp, app, objecttypename), Plats(plats)
 {}
 
 void MoverX(Player& player,sf::Vector2f speed) {
@@ -31,6 +32,16 @@ int Player::CollisionCheck() {
 	if (newy >= App.getSize().y) { //  if not landing, JumpBaning 
 		newy = (float)App.getSize().y;
 		return IsLanding;
+	}
+	for (auto it = Plats.begin(); it != Plats.end(); it++) {
+		float HalfW = it->GetSize().x, HalfH = it->GetSize().y/2;
+		float PosX = it->GetPosition().x, PosY = it->GetPosition().y;
+		if (GetPosition().x<PosX + 2*HalfW and GetPosition().x>PosX - 2*HalfW
+			and GetPosition().y<PosY + HalfH and GetPosition().y>PosY - 2*HalfH
+			and dy > 0) {
+			newy = (float)(PosY - HalfH);
+			return IsLanding;
+		}
 	}
 	return IsTop;
 }
