@@ -6,10 +6,10 @@ Player::Player(sf::Sprite& sp, sf::RenderWindow& app,
 {}
 
 void MoverX(Player& player,sf::Vector2f speed) {
-	if (KeyPressing and KeyEvent(Left)) {
+	if (KeyPressing and (KeyEvent(Left) or KeyEvent(A))) {
 		player.newx -= speed.x;
 	}
-	if (KeyPressing and KeyEvent(Right)) {
+	if (KeyPressing and (KeyEvent(Right) or KeyEvent(D))) {
 		player.newx += speed.x;
 	}
 }
@@ -17,7 +17,7 @@ void MoverX(Player& player,sf::Vector2f speed) {
 void MoverJump(Player& player, sf::RenderWindow& App, time_t& timedata) {
 	time_t FrameTime = timedata;
 	while (App.isOpen()) {
-		if (KeyPressing and KeyEvent(Up)) {
+		if (KeyPressing and (KeyEvent(Up) or KeyEvent(W))) {
 			if (player.CollisionCheck() == player.IsLanding) {
 				player.dy = -20.0f;
 				player.newy += player.dy;

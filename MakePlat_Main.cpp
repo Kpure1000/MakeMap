@@ -15,11 +15,14 @@ void timecontrol(sf::RenderWindow& App, time_t& timedata) {
 int main() {
 	const float AppW = 2000, AppH = 1500;
 	RenderWindow App(VideoMode((unsigned int)AppW, (unsigned int)AppH), "WinterGame", CannotResize);
-	App.setFramerateLimit(120);
+	App.setFramerateLimit(160);
 
 	AssetManager SourceManager;
 	AssetManager::GetTexture(PlatForm);
 	AssetManager::GetTexture(Player_f);
+
+	sf::View Player_ca(Vector2f(AppW/2, AppH/2), Vector2f(AppW, AppH));
+	App.setView(Player_ca);
 
 	vector<Plat>Plats;
 
@@ -35,6 +38,7 @@ int main() {
 	Player Player1(Player_sp, App, "Player1", Plats);
 	Player1.SetGravity(true);
 	Player1.SetScale({ 3.5f,3.5f });
+	Player1.SetPosition({ AppW / 2,0 });
 
 	time_t TimeData = 0;
 	thread TimeControl(timecontrol, ref(App), ref(TimeData));
@@ -46,6 +50,8 @@ int main() {
 	Plat1.SetMover(true);
 
 	Player1.SetUp();
+
+	Con1.RandomMake();
 
 	for (auto it = Plats.begin(); it != Plats.end(); it++) {
 		it->SetUp();
@@ -86,6 +92,9 @@ int main() {
 		}
 
 		Player1.Update();
+
+		Player_ca.setCenter(Player1.GetPosition());
+		App.setView(Player_ca);
 
 		App.display();
 	}

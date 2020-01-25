@@ -55,7 +55,9 @@ void Plat::Update() {
 
 	if (IsCousor) {
 		Vector2i MousePos = Mouse::getPosition(App);
-		newx = MousePos.x, newy = MousePos.y;
+		float subX = App.getView().getCenter().x - App.getSize().x / 2;
+		float subY = App.getView().getCenter().y - App.getSize().y / 2;
+		newx = MousePos.x + subX, newy = MousePos.y + subY;
 	}
 	if (IsMover) {
 		sprite.setPosition(newx, newy);
