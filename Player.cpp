@@ -2,8 +2,9 @@
 
 Player::Player(sf::Sprite& sp, sf::RenderWindow& app,
 	std::string const& objecttypename, vector<Plat>&plats)
-	:GameObject(sp, app, objecttypename), Plats(plats)
-{}
+	:GameObject(sp, app, objecttypename), Plats(plats){
+	isStatic = false;
+}
 
 void MoverX(Player& player,sf::Vector2f speed) {
 	if (KeyPressing and (KeyEvent(Left) or KeyEvent(A))) {
@@ -34,13 +35,17 @@ int Player::CollisionCheck() {
 		return IsLanding;
 	}
 	for (auto it = Plats.begin(); it != Plats.end(); it++) {
-		float HalfW = it->GetSize().x, HalfH = it->GetSize().y/2;
+		float HalfW = it->GetSize().x/2, HalfH = it->GetSize().y/2;
 		float PosX = it->GetPosition().x, PosY = it->GetPosition().y;
-		if (GetPosition().x<PosX + 2*HalfW and GetPosition().x>PosX - 2*HalfW
-			and GetPosition().y<PosY + HalfH and GetPosition().y>PosY - 2*HalfH
-			and dy > 0) {
-			newy = (float)(PosY - HalfH);
+		if (GetPosition().x <= PosX + 4 * HalfW and GetPosition().x >= PosX - 4 * HalfW
+			and
+			GetPosition().y <= PosY + HalfH and GetPosition().y >= PosY - 2 * HalfH
+			and dy >= 0) {
+				newy = (float)(PosY - HalfH);
 			return IsLanding;
+			//如果vector中某一段Plat连续下降且相距很近
+			//可以持续返回IsLanding
+			//这一性质可以用来构造自动上升梯(不能下降)
 		}
 	}
 	return IsTop;

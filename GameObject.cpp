@@ -49,6 +49,14 @@ bool GameObject::IsVisible() {
 	return Visible;
 }
 
+Vector2f GameObject::GetScale() {
+	return sprite.getScale();
+}
+
+bool GameObject::GetGravity() {
+	return IsGravity;
+}
+
 sf::Vector2f GameObject::GetPosition() {
 	return sprite.getPosition();
 }

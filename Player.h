@@ -4,6 +4,8 @@ class Player :
 	public GameObject {
 private:
 	vector<Plat>&Plats;
+
+	bool isStatic;
 public:
 
 	Player(sf::Sprite& sp, sf::RenderWindow& app,

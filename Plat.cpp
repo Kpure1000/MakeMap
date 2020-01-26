@@ -12,8 +12,7 @@ Plat::Plat(sf::Sprite& sp, sf::RenderWindow& app,
 int Plat::CollisionCheck() {
 	if (newy >= App.getSize().y)
 	{
-		newy = App.getSize().y;
-		cout << App.getSize().y << "real: " << newy << endl;
+		newy = (float)App.getSize().y;
 		return IsLanding;
 	}
 	else {
@@ -67,6 +66,6 @@ void Plat::Update() {
 }
 
 Vector2f Plat::GetSize() {
-	return Vector2f(sprite.getTextureRect().width,
-		sprite.getTextureRect().height);
+	return Vector2f((float)sprite.getTextureRect().width,
+		(float)sprite.getTextureRect().height);
 }

@@ -70,7 +70,11 @@ public: //	Set
 public: //  Get
 	
 	bool IsVisible();
+
+	bool GetGravity();
 	
+	Vector2f GetScale();
+
 	sf::Vector2f GetPosition();
 
 	std::string GetName();

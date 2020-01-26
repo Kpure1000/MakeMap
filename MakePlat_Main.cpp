@@ -29,6 +29,8 @@ int main() {
 	Control Con1(App,Plats);
 	//Con1.RandomMake();
 
+	Con1.OpenPositionFile(PosFile);
+
 	sf::Sprite Plat_sp(AssetManager::GetTexture(PlatForm));
 	Plat Plat1(Plat_sp, App, "Normal",Plats);
 	Plat1.SetGravity(false);
@@ -50,8 +52,6 @@ int main() {
 	Plat1.SetMover(true);
 
 	Player1.SetUp();
-
-	Con1.RandomMake();
 
 	for (auto it = Plats.begin(); it != Plats.end(); it++) {
 		it->SetUp();
@@ -101,6 +101,8 @@ int main() {
 
 	MoveThread.join();
 	TimeControl.join();
+
+	Con1.SavePositionFile();
 
 	return 0;
 }

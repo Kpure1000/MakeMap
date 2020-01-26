@@ -13,16 +13,16 @@ void MouseControl(Control& control, sf::RenderWindow& App, Plat& Plat1) {
 }
 
 void Control::RandomMake() {
-	/*srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	for (int i = 0; i < 20; i++) {
-		Plat Plat1(Plat_sp, App, "Normal", Plats);
-		Plat1.SetGravity(false);
-		Plat1.SetScale({ 7,7 });
+		Plat Plat0(Plat_sp, App, "Normal", Plats);
+		Plat0.SetGravity(false);
+		Plat0.SetScale({ 3.5f,3.5f });
 		float x = rand() % (int)AppW + 0.01f * (float)(rand() % (int)AppW);
 		float y = rand() % (int)AppH + 0.01f * (float)(rand() % (int)AppH);
-		Plat1.SetPosition({ x,y });
-		Plats.push_back(Plat1);
-	}*/
+		Plat0.SetPosition({ x,y });
+		Plats.push_back(Plat0);
+	}
 	const int N = 60;
 	for (int i = 0; i < N; i++) {
 		Plat Platn(Plat_sp, App, "Normal", Plats);
@@ -30,7 +30,7 @@ void Control::RandomMake() {
 		Platn.SetScale({ 3.5f,3.5f });
 		Platn.SetPosition({ AppW * i / N,AppH });
 		Plats.push_back(Platn);
-		if ((int)i % 2 == 0) {
+		if ((int)i % 3 == 0) {
 			Plat PlatnL(Plat_sp, App, "Normal", Plats);
 			PlatnL.SetGravity(false);
 			PlatnL.SetScale({ 3.5f,3.5f });
@@ -45,3 +45,64 @@ void Control::RandomMake() {
 	}
 
 }
+
+void Control::OpenPositionFile(string const& filename) {
+	PositionFileName = filename;
+	ifstream InPos(filename);
+	if (InPos.is_open()) {
+		string objecttypename;
+		bool gravity;
+		Vector2f scale;
+		Vector2f position;
+		while (!InPos.eof()) {
+
+			InPos >> objecttypename 
+				>> gravity 
+				>> scale.x >> scale.y 
+				>> position.x >> position.y;
+
+			Plat Platn(Plat_sp, App, "Normal", Plats);
+			Platn.SetGravity(gravity);
+			Platn.SetScale(scale);
+			Platn.SetPosition(position);
+			Plats.push_back(Platn);
+		}
+		InPos.close(); return;
+	}
+	InPos.close(); return;
+}
+
+void Control::SavePositionFile(string const& filename) {
+	PositionFileName = filename;
+
+	ofstream OutPos(PositionFileName);
+	if (OutPos.is_open()) {
+		for (auto it = Plats.begin(); it != Plats.end(); it++) {
+			OutPos << it->GetName() << " "
+				<< it->GetGravity() << " "
+				<< it->GetScale().x << " " << it->GetScale().y << " "
+				<< it->GetPosition().x << " " << it->GetPosition().y << endl;
+		}
+		OutPos.close();
+		return;
+	}
+	OutPos.close();
+	return;
+}
+
+void Control::SavePositionFile() {
+	ofstream OutPos(PositionFileName);
+	if (OutPos.is_open()) {
+		for (auto it = Plats.begin(); it != Plats.end(); it++) {
+			OutPos << it->GetName() << " "
+				<< it->GetGravity() << " "
+				<< it->GetScale().x << " " << it->GetScale().y << " "
+				<< it->GetPosition().x << " " << it->GetPosition().y << endl;
+		}
+		OutPos.close();
+		return;
+	}
+	OutPos.close();
+	return;
+}
+
