@@ -6,7 +6,6 @@ void MouseControl(Control& control, sf::RenderWindow& App, Plat& Plat1) {
 	while (App.isOpen()) {
 		if (Mouse::isButtonPressed(Mouse::Left)) {
 			Plat tmp = Plat1;
-			tmp.SetCousor(false);
 			control.Plats.push_back(tmp);
 		}
 	}
@@ -14,7 +13,7 @@ void MouseControl(Control& control, sf::RenderWindow& App, Plat& Plat1) {
 
 void Control::RandomMake() {
 	srand((unsigned int)time(NULL));
-	for (int i = 0; i < 20; i++) {
+	/*for (int i = 0; i < 20; i++) {
 		Plat Plat0(Plat_sp, App, "Normal", Plats);
 		Plat0.SetGravity(false);
 		Plat0.SetScale({ 3.5f,3.5f });
@@ -22,7 +21,7 @@ void Control::RandomMake() {
 		float y = rand() % (int)AppH + 0.01f * (float)(rand() % (int)AppH);
 		Plat0.SetPosition({ x,y });
 		Plats.push_back(Plat0);
-	}
+	}*/
 	const int N = 60;
 	for (int i = 0; i < N; i++) {
 		Plat Platn(Plat_sp, App, "Normal", Plats);
@@ -46,37 +45,52 @@ void Control::RandomMake() {
 
 }
 
-void Control::OpenPositionFile(string const& filename) {
+int Control::OpenPositionFile(string const& filename) {
 	PositionFileName = filename;
 	ifstream InPos(filename);
 	if (InPos.is_open()) {
-		string objecttypename;
-		bool gravity;
-		Vector2f scale;
-		Vector2f position;
-		while (!InPos.eof()) {
-
-			InPos >> objecttypename 
-				>> gravity 
-				>> scale.x >> scale.y 
-				>> position.x >> position.y;
-
-			Plat Platn(Plat_sp, App, "Normal", Plats);
-			Platn.SetGravity(gravity);
-			Platn.SetScale(scale);
-			Platn.SetPosition(position);
-			Plats.push_back(Platn);
+		string in_begin;
+		InPos >> in_begin;
+		if (in_begin != "EXIST") {
+			return 0;
 		}
-		InPos.close(); return;
 	}
-	InPos.close(); return;
+	else {
+		return 0;
+	}
+	string objecttypename;
+	bool gravity;
+	Vector2f scale;
+	Vector2f position;
+	while (!InPos.eof()) {
+		InPos >> objecttypename 
+			>> gravity 
+			>> scale.x >> scale.y 
+			>> position.x >> position.y;
+
+		Plat Platn(Plat_sp, App, "Normal", Plats);
+		Platn.SetGravity(gravity);
+		Platn.SetScale(scale);
+		Platn.SetPosition(position);
+		Platn.SetCousor(false);
+		Platn.SetMover(true);
+		Plats.push_back(Platn);
+	}
+	InPos.close(); 
+	return 1;
 }
 
 void Control::SavePositionFile(string const& filename) {
 	PositionFileName = filename;
 
 	ofstream OutPos(PositionFileName);
+	if (Plats.size() == 0) {
+		OutPos << "NOT EXIST" << endl;
+		OutPos.close();
+		return;
+	}
 	if (OutPos.is_open()) {
+		OutPos << "EXIST" << endl;
 		for (auto it = Plats.begin(); it != Plats.end(); it++) {
 			OutPos << it->GetName() << " "
 				<< it->GetGravity() << " "
@@ -86,13 +100,18 @@ void Control::SavePositionFile(string const& filename) {
 		OutPos.close();
 		return;
 	}
-	OutPos.close();
 	return;
 }
 
 void Control::SavePositionFile() {
 	ofstream OutPos(PositionFileName);
+	if (Plats.size() == 0) {
+		OutPos << "NOT EXIST" << endl;
+		OutPos.close();
+		return;
+	}
 	if (OutPos.is_open()) {
+		OutPos << "EXIST" << endl;
 		for (auto it = Plats.begin(); it != Plats.end(); it++) {
 			OutPos << it->GetName() << " "
 				<< it->GetGravity() << " "
@@ -102,7 +121,6 @@ void Control::SavePositionFile() {
 		OutPos.close();
 		return;
 	}
-	OutPos.close();
 	return;
 }
 

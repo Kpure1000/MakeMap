@@ -18,7 +18,7 @@ public:
 		AppW = (float)App.getSize().x, AppH = (float)App.getSize().y;
 	}
 
-	void OpenPositionFile(string const& filename);
+	int OpenPositionFile(string const& filename);
 
 	void RandomMake();
 

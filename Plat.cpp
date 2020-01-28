@@ -31,7 +31,18 @@ void Plat::SetMover(bool setting) {
  //  Game://////////////
 
 void Plat::Draw() {
-	App.draw(sprite);
+	float subX = App.getView().getCenter().x - App.getSize().x / 2;
+	float subY = App.getView().getCenter().y - App.getSize().y / 2;
+	float XR = GetPosition().x + GetSize().x-subX;
+	float XL = GetPosition().x - GetSize().x-subX;
+	float YD = GetPosition().y + GetSize().y-subY;
+	float YU = GetPosition().y - GetSize().y-subY;
+	if (XR <= App.getSize().x + 100
+		and XL >= -100
+		and YD <= App.getSize().y + 100
+		and YU >= -100) {
+		App.draw(sprite);
+	}
 }
 
 void Plat::SetUp() {
@@ -43,20 +54,23 @@ void Plat::SetUp() {
 }
 
 void Plat::Update() {
-	if (IsMover) {
-		newx = sprite.getPosition().x,
-			newy = sprite.getPosition().y;
-	}
-
-	sf::Vector2f Speed(0, 0);
+	//if (IsMover) {
+	//	newx = sprite.getPosition().x,
+	//		newy = sprite.getPosition().y;
+	//}
 
 	Gravity();
 
 	if (IsCousor) {
 		Vector2i MousePos = Mouse::getPosition(App);
+		float scaleX = App.getView().getSize().x / App.getSize().x;
+		float scaleY = App.getView().getSize().y / App.getSize().y;
 		float subX = App.getView().getCenter().x - App.getSize().x / 2;
 		float subY = App.getView().getCenter().y - App.getSize().y / 2;
-		newx = MousePos.x + subX, newy = MousePos.y + subY;
+		
+		newx = App.getView().getCenter().x * (1 - scaleX) + (MousePos.x + subX) * scaleX;
+
+		newy = App.getView().getCenter().y * (1 - scaleY) + (MousePos.y + subY) * scaleY;
 	}
 	if (IsMover) {
 		sprite.setPosition(newx, newy);

@@ -15,3 +15,4 @@ const float GRAVITY = 0.7f;
 //Source File Path:
 #define Player_f "Source\\player_first.png"
 #define PlatForm "Source\\Platform.png"
+#define _3dfont "Source/3D Hand Drawns.ttf"

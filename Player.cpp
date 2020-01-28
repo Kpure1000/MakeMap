@@ -15,8 +15,7 @@ void MoverX(Player& player,sf::Vector2f speed) {
 	}
 }
 
-void MoverJump(Player& player, sf::RenderWindow& App, time_t& timedata) {
-	time_t FrameTime = timedata;
+void MoverJump(Player& player, sf::RenderWindow& App) {
 	while (App.isOpen()) {
 		if (KeyPressing and (KeyEvent(Up) or KeyEvent(W))) {
 			if (player.CollisionCheck() == player.IsLanding) {
@@ -30,8 +29,8 @@ void MoverJump(Player& player, sf::RenderWindow& App, time_t& timedata) {
 }
 
 int Player::CollisionCheck() {
-	if (newy >= App.getSize().y) { //  if not landing, JumpBaning 
-		newy = (float)App.getSize().y;
+	if (newy >= App.getSize().y + 30) { //  if not landing, JumpBaning 
+		newy = (float)App.getSize().y + 30;
 		return IsLanding;
 	}
 	for (auto it = Plats.begin(); it != Plats.end(); it++) {
