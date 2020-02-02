@@ -32,15 +32,20 @@ void FrameControl(time_t& CurrentTime, sf::RenderWindow& App) {
 
 int main() {
 	const float AppW = 2000, AppH = 1500;
-	RenderWindow App(VideoMode((unsigned int)AppW, (unsigned int)AppH), "WinterGame", CannotResize);
-	//App.setFramerateLimit(160);
+	RenderWindow App(VideoMode((unsigned int)AppW, (unsigned int)AppH), "MakeMap", CannotResize);
+	App.setFramerateLimit(160);
 
 	AssetManager SourceManager;
 	AssetManager::GetTexture(PlatForm);
 	AssetManager::GetTexture(Player_f);
 
-	sf::View Player_ca(Vector2f(AppW/2, AppH/2), Vector2f(AppW*1, AppH*1));
+	sf::View Player_ca(Vector2f(AppW/2, AppH/2), Vector2f(AppW*1.0, AppH*1.0));
 	App.setView(Player_ca);
+	Player_ca.setViewport(sf::FloatRect(0, 0, 1, 1));
+
+	sf::View MiniMap(sf::Vector2f(AppW / 2, AppH / 2), Vector2f(AppW, AppH));
+	MiniMap.setViewport(sf::FloatRect(0.75f, 0.0f, 0.25f, 0.25f));
+	App.setView(MiniMap);
 
 	vector<Plat>Plats;
 
@@ -106,10 +111,9 @@ int main() {
 				App.close();
 			}
 		}
-		App.clear(Color(0,0,0, 0));
-
-		Plat1.Update();
-
+		////
+		
+		////
 		if (Mouse::isButtonPressed(Mouse::Left)) {
 			Plat tmp = Plat1;
 			tmp.SetCousor(false);
@@ -117,7 +121,7 @@ int main() {
 			while (Mouse::isButtonPressed(Mouse::Left))
 				;
 		}
-		
+		////
 		if (KeyEvent(LControl)) {
 			if (!Plats.empty() and KeyEvent(Z)) {
 				Plats.pop_back();
@@ -125,23 +129,38 @@ int main() {
 					;
 			}
 		}
-
+		////
+		App.clear(Color(0, 0, 0, 0));
+		////////
+		App.setView(Player_ca);
+		////
+		Plat1.Update();
 		for (auto it = Plats.begin(); it != Plats.end(); it++) {
 			it->Update();
 		}
-
+		////
 		Player1.Update();
-
+		////
 		Player_ca.setCenter(Player1.GetPosition());
-		App.setView(Player_ca);
-
+		////
+		auto newtextpos = App.mapPixelToCoords({ 50,50 });
+		text.setPosition(newtextpos);
 		App.draw(text);
-
-		App.display();
-
-		while (EndTime - StartTime <= TimeDelay) {
-			EndTime = clock();
+		////
+		App.setView(MiniMap);
+		////
+		Plat1.Update();
+		for (auto it = Plats.begin(); it != Plats.end(); it++) {
+			it->Update();
 		}
+		////
+		Player1.Update();
+		////////
+		App.display();
+		////
+		/*while (EndTime - StartTime <= TimeDelay) {
+			EndTime = clock();
+		}*/
 
 		EndTime = clock();
 
@@ -149,8 +168,7 @@ int main() {
 		textin = ToString(frametmp);
 		textin += " fps";
 		text.setString(textin);
-		text.setPosition({ Player1.GetPosition().x - AppW / 2 + 50,
-			Player1.GetPosition().y - AppH / 2 + 50 });
+		
 	}
 
 	MoveThread.join();

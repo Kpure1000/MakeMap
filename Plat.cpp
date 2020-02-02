@@ -63,14 +63,19 @@ void Plat::Update() {
 
 	if (IsCousor) {
 		Vector2i MousePos = Mouse::getPosition(App);
-		float scaleX = App.getView().getSize().x / App.getSize().x;
-		float scaleY = App.getView().getSize().y / App.getSize().y;
-		float subX = App.getView().getCenter().x - App.getSize().x / 2;
-		float subY = App.getView().getCenter().y - App.getSize().y / 2;
-		
-		newx = App.getView().getCenter().x * (1 - scaleX) + (MousePos.x + subX) * scaleX;
-
-		newy = App.getView().getCenter().y * (1 - scaleY) + (MousePos.y + subY) * scaleY;
+		auto MousePosinView = App.mapPixelToCoords(MousePos);
+		/////////////////////////////////////////////////////////////////////////////////////
+		////sh*t...these codes can replace by mapPixelCoords...
+		////float scaleX = App.getView().getSize().x / App.getSize().x;
+		////float scaleY = App.getView().getSize().y / App.getSize().y;
+		////float subX = App.getView().getCenter().x - App.getSize().x / 2;
+		////float subY = App.getView().getCenter().y - App.getSize().y / 2;
+		////
+		////newx = App.getView().getCenter().x * (1 - scaleX) + (MousePos.x + subX) * scaleX;
+		////
+		////newy = App.getView().getCenter().y * (1 - scaleY) + (MousePos.y + subY) * scaleY;
+		/////////////////////////////////////////////////////////////////////////////////////
+		newx = MousePosinView.x, newy = MousePosinView.y;
 	}
 	if (IsMover) {
 		sprite.setPosition(newx, newy);
