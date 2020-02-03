@@ -33,7 +33,7 @@ void FrameControl(time_t& CurrentTime, sf::RenderWindow& App) {
 int main() {
 	const float AppW = 2000, AppH = 1500;
 	RenderWindow App(VideoMode((unsigned int)AppW, (unsigned int)AppH), "MakeMap", CannotResize);
-	App.setFramerateLimit(160);
+	//App.setFramerateLimit(160);
 
 	AssetManager SourceManager;
 	AssetManager::GetTexture(PlatForm);
@@ -43,7 +43,7 @@ int main() {
 	App.setView(Player_ca);
 	Player_ca.setViewport(sf::FloatRect(0, 0, 1, 1));
 
-	sf::View MiniMap(sf::Vector2f(AppW / 2, AppH / 2), Vector2f(AppW, AppH));
+	sf::View MiniMap(sf::Vector2f(AppW / 2, AppH / 2), Vector2f(AppW*2.0, AppH*2.0));
 	MiniMap.setViewport(sf::FloatRect(0.75f, 0.0f, 0.25f, 0.25f));
 	App.setView(MiniMap);
 
@@ -140,6 +140,7 @@ int main() {
 		}
 		////
 		Player1.Update();
+		////Warning:need to SPLIT draw and Update
 		////
 		Player_ca.setCenter(Player1.GetPosition());
 		////
@@ -147,7 +148,9 @@ int main() {
 		text.setPosition(newtextpos);
 		App.draw(text);
 		////
-		App.setView(MiniMap);
+		App.setView(MiniMap);//
+		////小地图中的draw不能根据view优化(不在viewport内的不draw)
+		////因此draw需要加一个状态参数，选择是否优化
 		////
 		Plat1.Update();
 		for (auto it = Plats.begin(); it != Plats.end(); it++) {
@@ -155,12 +158,14 @@ int main() {
 		}
 		////
 		Player1.Update();
+		////
+		//MiniMap.setCenter(Player1.GetPosition());
 		////////
 		App.display();
 		////
-		/*while (EndTime - StartTime <= TimeDelay) {
+		while (EndTime - StartTime <= TimeDelay) {
 			EndTime = clock();
-		}*/
+		}
 
 		EndTime = clock();
 
